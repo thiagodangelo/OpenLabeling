@@ -12,7 +12,7 @@ from tqdm import tqdm
 from lxml import etree
 import xml.etree.cElementTree as ET
 
-from dasiamrpn import dasiamrpn
+# from dasiamrpn import dasiamrpn
 
 DELAY = 20 # keyboard delay (in milliseconds)
 WITH_QT = False
@@ -37,7 +37,7 @@ tracker_types = ['CSRT', 'KCF','MOSSE', 'MIL', 'BOOSTING', 'MEDIANFLOW', 'TLD', 
         CSRT -> More accurate than KCF but slightly slower (minimum OpenCV 3.4.2)
         MOSSE -> Less accurate than KCF but very fast (minimum OpenCV 3.4.1)
 '''
-parser.add_argument('--tracker', default='DASIAMRPN', type=str, help="tracker_type being used: ['CSRT', 'KCF','MOSSE', 'MIL', 'BOOSTING', 'MEDIANFLOW', 'TLD', 'GOTURN', 'DASIAMRPN']")
+parser.add_argument('--tracker', default='CSRT', type=str, help="tracker_type being used: ['CSRT', 'KCF','MOSSE', 'MIL', 'BOOSTING', 'MEDIANFLOW', 'TLD', 'GOTURN', 'DASIAMRPN']")
 parser.add_argument('-n', '--n_frames', default='200', type=int, help='number of frames to track object for')
 args = parser.parse_args()
 
@@ -664,7 +664,8 @@ def get_annotation_paths(img_path, annotation_formats):
     annotation_paths = []
     for ann_dir, ann_ext in annotation_formats.items():
         new_path = os.path.join(OUTPUT_DIR, ann_dir)
-        new_path = img_path.replace(INPUT_DIR, new_path, 1)
+        end_path = img_path.replace(INPUT_DIR, '', 1)
+        new_path = os.path.join(new_path, end_path)
         pre_path, img_ext = os.path.splitext(new_path)
         new_path = new_path.replace(img_ext, ann_ext, 1)
         annotation_paths.append(new_path)
